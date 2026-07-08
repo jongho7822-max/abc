@@ -12,6 +12,7 @@
     --text: #e8eaed;
     --muted: #9aa0a6;
     --accent: #6ea8fe;
+    --accent-strong: #3d7dfc;
   }
   @media (prefers-color-scheme: light) {
     :root {
@@ -20,6 +21,7 @@
       --text: #1a1d21;
       --muted: #5f6368;
       --accent: #3b6fe0;
+      --accent-strong: #2955c9;
     }
   }
   * { box-sizing: border-box; }
@@ -31,21 +33,106 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif;
     padding: 48px 24px;
   }
-  header {
-    text-align: center;
-    max-width: 640px;
-    margin: 0 auto 40px;
+
+  /* ---- Hero Swiper ---- */
+  .hero {
+    position: relative;
+    max-width: 1100px;
+    margin: 0 auto 48px;
+    height: 380px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.25);
   }
-  h1 {
-    margin: 0 0 12px;
-    font-size: 2.2rem;
+  .hero-track {
+    display: flex;
+    height: 100%;
+    transition: transform 0.6s ease;
+  }
+  .hero-slide {
+    position: relative;
+    min-width: 100%;
+    height: 100%;
+  }
+  .hero-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .hero-slide::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.65), rgba(0,0,0,0) 55%);
+  }
+  .hero-caption {
+    position: absolute;
+    left: 32px;
+    bottom: 32px;
+    color: #fff;
+    z-index: 1;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  }
+  .hero-caption h1 {
+    margin: 0 0 8px;
+    font-size: 2.1rem;
     letter-spacing: -0.02em;
   }
-  header p {
+  .hero-caption p {
     margin: 0;
-    color: var(--muted);
-    line-height: 1.6;
+    font-size: 1rem;
+    opacity: 0.9;
   }
+  .hero-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.45);
+    color: #fff;
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .hero-nav:hover {
+    background: rgba(0,0,0,0.7);
+    transform: translateY(-50%) scale(1.08);
+  }
+  .hero-prev { left: 16px; }
+  .hero-next { right: 16px; }
+  .hero-dots {
+    position: absolute;
+    bottom: 18px;
+    right: 24px;
+    display: flex;
+    gap: 8px;
+    z-index: 2;
+  }
+  .hero-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .hero-dot.active {
+    background: #fff;
+    transform: scale(1.25);
+  }
+
+  /* ---- Cards ---- */
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -69,6 +156,9 @@
   }
   .card-body {
     padding: 20px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
   }
   .card-body h2 {
     margin: 0 0 6px;
@@ -83,20 +173,75 @@
     font-size: 0.78rem;
     font-weight: 600;
     margin-bottom: 10px;
+    width: fit-content;
   }
   .card-body p {
-    margin: 0;
+    margin: 0 0 16px;
     color: var(--muted);
     line-height: 1.6;
     font-size: 0.95rem;
   }
+  .btn {
+    margin-top: auto;
+    align-self: flex-start;
+    padding: 11px 22px;
+    border: none;
+    border-radius: 999px;
+    background: var(--accent-strong);
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(61,125,252,0.45);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  }
+  .btn:hover {
+    background: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(61,125,252,0.55);
+  }
+  .btn:active {
+    transform: translateY(0);
+  }
 </style>
 </head>
 <body>
-  <header>
-    <h1>🐾 우리 반려동물 소개</h1>
-    <p>사랑스러운 우리 아이들을 소개합니다.</p>
-  </header>
+
+  <div class="hero" id="hero">
+    <div class="hero-track" id="heroTrack">
+      <div class="hero-slide">
+        <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=1400&q=80" alt="몽이">
+        <div class="hero-caption">
+          <h1>🐾 우리 반려동물 소개</h1>
+          <p>사랑스러운 우리 아이들을 소개합니다 — 몽이</p>
+        </div>
+      </div>
+      <div class="hero-slide">
+        <img src="https://images.unsplash.com/photo-1533738363-b7f9aef128ce?auto=format&fit=crop&w=1400&q=80" alt="나비">
+        <div class="hero-caption">
+          <h1>🐾 우리 반려동물 소개</h1>
+          <p>도도하지만 사랑스러운 나비</p>
+        </div>
+      </div>
+      <div class="hero-slide">
+        <img src="https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?auto=format&fit=crop&w=1400&q=80" alt="토실이">
+        <div class="hero-caption">
+          <h1>🐾 우리 반려동물 소개</h1>
+          <p>당근을 좋아하는 토실이</p>
+        </div>
+      </div>
+      <div class="hero-slide">
+        <img src="https://images.unsplash.com/photo-1552728089-57bdde30beb3?auto=format&fit=crop&w=1400&q=80" alt="짹짹이">
+        <div class="hero-caption">
+          <h1>🐾 우리 반려동물 소개</h1>
+          <p>노래에 맞춰 춤추는 짹짹이</p>
+        </div>
+      </div>
+    </div>
+    <button class="hero-nav hero-prev" id="heroPrev" aria-label="이전 슬라이드">&#10094;</button>
+    <button class="hero-nav hero-next" id="heroNext" aria-label="다음 슬라이드">&#10095;</button>
+    <div class="hero-dots" id="heroDots"></div>
+  </div>
 
   <div class="grid">
     <div class="card">
@@ -105,6 +250,7 @@
         <span class="badge">강아지</span>
         <h2>몽이</h2>
         <p>골든 리트리버, 3살. 활발하고 애교가 많아서 산책 시간을 제일 좋아해요.</p>
+        <button class="btn">자세히 보기</button>
       </div>
     </div>
 
@@ -114,6 +260,7 @@
         <span class="badge">고양이</span>
         <h2>나비</h2>
         <p>러시안 블루, 2살. 조용하고 도도하지만 가끔 무릎 위로 올라오는 츤데레예요.</p>
+        <button class="btn">자세히 보기</button>
       </div>
     </div>
 
@@ -123,6 +270,7 @@
         <span class="badge">토끼</span>
         <h2>토실이</h2>
         <p>홀란드 롭 토끼, 1살. 당근을 세상에서 제일 좋아하고 겁이 많아요.</p>
+        <button class="btn">자세히 보기</button>
       </div>
     </div>
 
@@ -132,8 +280,52 @@
         <span class="badge">앵무새</span>
         <h2>짹짹이</h2>
         <p>왕관앵무, 4살. 말을 곧잘 따라하고 노래를 틀어주면 신나게 춤을 춰요.</p>
+        <button class="btn">자세히 보기</button>
       </div>
     </div>
   </div>
+
+  <script>
+    (function () {
+      const track = document.getElementById('heroTrack');
+      const slides = track.children;
+      const dotsWrap = document.getElementById('heroDots');
+      const prevBtn = document.getElementById('heroPrev');
+      const nextBtn = document.getElementById('heroNext');
+      let index = 0;
+      let timer;
+
+      for (let i = 0; i < slides.length; i++) {
+        const dot = document.createElement('button');
+        dot.className = 'hero-dot' + (i === 0 ? ' active' : '');
+        dot.setAttribute('aria-label', (i + 1) + '번 슬라이드');
+        dot.addEventListener('click', () => goTo(i));
+        dotsWrap.appendChild(dot);
+      }
+
+      function update() {
+        track.style.transform = 'translateX(' + (-index * 100) + '%)';
+        [...dotsWrap.children].forEach((d, i) => d.classList.toggle('active', i === index));
+      }
+
+      function goTo(i) {
+        index = (i + slides.length) % slides.length;
+        update();
+        resetTimer();
+      }
+
+      function next() { goTo(index + 1); }
+      function prev() { goTo(index - 1); }
+
+      function resetTimer() {
+        clearInterval(timer);
+        timer = setInterval(next, 4500);
+      }
+
+      nextBtn.addEventListener('click', next);
+      prevBtn.addEventListener('click', prev);
+      resetTimer();
+    })();
+  </script>
 </body>
 </html>
